@@ -1,0 +1,54 @@
+name: Weekly Data Refresh
+
+on:
+  schedule:
+    # Every Monday at 06:00 UTC (application season)
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: pip install -r scraper/requirements.txt
+
+      - name: Run scrapers and enrichment
+        run: python scraper/run_all.py
+
+      - name: Sync database to web for deploy
+        run: cp data/unis.db web/data/unis.db
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Verify dashboard build
+        run: |
+          cd web
+          npm ci
+          npm run build
+
+      - name: Commit and push refreshed data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/unis.db web/data/unis.db
+          git diff --staged --quiet || git commit -m "chore: refresh program data"
+          git push
+
+      - name: Upload database artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: unis-db
+          path: data/unis.db
+          retention-days: 30
