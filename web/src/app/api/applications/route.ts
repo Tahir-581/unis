@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import type { ApplicationStatus, RejectionReason, UserApplication, UserOverride } from "@/lib/types";
 import { bulkUpsertApplications, getAllApplications, upsertApplication } from "@/lib/user-db";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   try {
     const country = request.nextUrl.searchParams.get("country") ?? undefined;
