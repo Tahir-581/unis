@@ -1,6 +1,8 @@
 export type Country = "germany" | "italy" | "spain" | "belgium" | "portugal";
 
-export type ApplicationStatus = "todo" | "in_progress" | "submitted" | "done";
+export type ApplicationStatus = "todo" | "in_progress" | "submitted" | "done" | "rejected";
+
+export type RejectionReason = "application_fees" | "deadline_passed" | "document" | "other";
 
 export interface ProgramRow {
   intake_id: number;
@@ -9,6 +11,9 @@ export interface ProgramRow {
   city: string | null;
   country: Country;
   program_name: string;
+  external_id: string | null;
+  field_domain: string | null;
+  study_category: string | null;
   cs_category: string | null;
   source_url: string | null;
   intake_season: "winter" | "summer";
@@ -36,7 +41,7 @@ export interface UrgentProgram extends ProgramRow {
 
 export interface CountryStats {
   country: Country;
-  program_count: number;
+  intake_count: number;
   deadlines_30_days: number;
 }
 
@@ -47,6 +52,16 @@ export interface UserOverride {
   tuition_amount?: number;
   notes?: string;
   status?: ApplicationStatus;
+}
+
+export interface UserApplication {
+  intake_key: string;
+  status: ApplicationStatus;
+  rejection_reason?: RejectionReason;
+  rejection_document?: string;
+  rejection_note?: string;
+  notes?: string;
+  overrides?: UserOverride;
 }
 
 export const COUNTRIES: { id: Country; label: string; flag: string }[] = [

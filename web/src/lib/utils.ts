@@ -7,20 +7,21 @@ export function intakeLabel(season: string, year: number): string {
 
 export function formatDeadline(date: string | null): string {
   if (!date) return "Not listed";
-  try {
-    return new Date(date).toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
-  } catch {
-    return date;
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) {
+    return date.length > 40 ? `${date.slice(0, 40)}…` : date;
   }
+  return parsed.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 }
 
 export function daysUntil(date: string | null): number | null {
   if (!date) return null;
   const target = new Date(date);
+  if (Number.isNaN(target.getTime())) return null;
   const now = new Date();
   now.setHours(0, 0, 0, 0);
   target.setHours(0, 0, 0, 0);
@@ -86,4 +87,23 @@ export function isStale(lastVerified: string | null, days = 14): boolean {
 
 export function effectiveDeadline(row: { application_deadline_non_eu: string | null; application_deadline: string | null }): string | null {
   return row.application_deadline_non_eu ?? row.application_deadline;
+}
+
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 80);
+}
+
+export function intakeKey(row: {
+  country: Country;
+  external_id: string | null;
+  program_name: string;
+  intake_season: string;
+  intake_year: number;
+}): string {
+  const id = row.external_id || slugify(row.program_name);
+  return `${row.country}|${id}|${row.intake_season}|${row.intake_year}`;
 }

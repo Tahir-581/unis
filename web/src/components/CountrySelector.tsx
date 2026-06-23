@@ -33,7 +33,7 @@ export function CountrySelector({ selected, onSelect, stats }: Props) {
             </div>
             {s && (
               <p className="mt-0.5 text-xs text-zinc-500">
-                {s.program_count} programs · {s.deadlines_30_days} deadlines in 30 days
+                {s.intake_count} intakes · {s.deadlines_30_days} deadlines in 30 days
               </p>
             )}
           </button>

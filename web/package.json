@@ -4,12 +4,15 @@
   "private": true,
   "scripts": {
     "prebuild": "node scripts/sync-db.mjs",
+    "predev": "node scripts/sync-db.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "@vercel/blob": "^2.4.1",
     "better-sqlite3": "^12.11.1",
     "next": "16.2.9",
     "react": "19.2.4",

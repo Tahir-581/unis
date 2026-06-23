@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EU CS Master's Dashboard",
+  title: "EU STEM Master's Dashboard",
   description:
-    "Track English-taught Computer Science Master's applications across Germany, Italy, Spain, Belgium, and Portugal.",
+    "Track English-taught Computer Science, Engineering, and Mathematics Master's applications across Germany, Italy, Spain, Belgium, and Portugal.",
 };
 
 export default function RootLayout({

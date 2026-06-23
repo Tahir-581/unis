@@ -10,6 +10,9 @@ const PROGRAMS_QUERY = `
     u.city,
     u.country,
     COALESCE(p.english_name, p.official_name) AS program_name,
+    p.external_id,
+    p.field_domain,
+    p.study_category,
     p.cs_category,
     p.source_url,
     pi.intake_season,
@@ -59,7 +62,7 @@ export function getCountryStats(): CountryStats[] {
       `
     SELECT
       u.country,
-      COUNT(DISTINCT p.id) AS program_count,
+      COUNT(pi.id) AS intake_count,
       SUM(CASE
         WHEN pi.application_deadline_non_eu IS NOT NULL
           AND date(pi.application_deadline_non_eu) BETWEEN date('now') AND date('now', '+30 days')
@@ -90,6 +93,8 @@ export function getUrgentPrograms(limit = 5): UrgentProgram[] {
         u.city,
         u.country,
         COALESCE(p.english_name, p.official_name) AS program_name,
+        p.field_domain,
+        p.study_category,
         p.cs_category,
         p.source_url,
         pi.intake_season,
