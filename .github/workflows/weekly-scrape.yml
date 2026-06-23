@@ -25,6 +25,9 @@ jobs:
       - name: Run scrapers and enrichment
         run: python scraper/run_all.py
 
+      - name: Migrate database schema
+        run: python scraper/db/migrate_v2_fields.py
+
       - name: Sync database to web for deploy
         run: cp data/unis.db web/data/unis.db
 
